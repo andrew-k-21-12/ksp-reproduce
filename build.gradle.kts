@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "1.7.10" apply false
-    kotlin("js") version "1.7.10"
+    kotlin("multiplatform") version "1.7.10"
     id("com.google.devtools.ksp") version "1.7.10-1.0.6"
 }
 
@@ -11,14 +11,8 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.0.0-pre.332-kotlin-1.6.21")
-    implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.0.0-pre.332-kotlin-1.6.21")
-    implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.9.0-pre.332-kotlin-1.6.21")
-}
-
 kotlin {
-    js(LEGACY) {
+    js(IR) {
         binaries.executable()
         browser {
             commonWebpackConfig {
@@ -26,4 +20,17 @@ kotlin {
             }
         }
     }
+    sourceSets {
+        val jsMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.0.0-pre.332-kotlin-1.6.21")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.0.0-pre.332-kotlin-1.6.21")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.9.0-pre.332-kotlin-1.6.21")
+            }
+        }
+    }
+}
+
+dependencies {
+    add("kspJs", project(":processor"))
 }
